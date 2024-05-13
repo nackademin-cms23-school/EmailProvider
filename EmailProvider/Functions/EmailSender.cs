@@ -7,16 +7,10 @@ using Microsoft.Extensions.Logging;
 
 namespace EmailProvider.Functions;
 
-public class EmailSender
+public class EmailSender(ILogger<EmailSender> logger, IEmailSenderService emailSenderService)
 {
-    private readonly ILogger<EmailSender> _logger;
-    private readonly IEmailSenderService _emailSenderService;
-
-    public EmailSender(ILogger<EmailSender> logger, IEmailSenderService emailSenderService)
-    {
-        _logger = logger;
-        _emailSenderService = emailSenderService;
-    }
+    private readonly ILogger<EmailSender> _logger = logger;
+    private readonly IEmailSenderService _emailSenderService = emailSenderService;
 
     [Function(nameof(EmailSender))]
     public async Task Run([ServiceBusTrigger("email_request", Connection = "ServiceBus")] ServiceBusReceivedMessage message, ServiceBusMessageActions messageActions)
